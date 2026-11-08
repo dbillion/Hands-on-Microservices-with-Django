@@ -1,13 +1,21 @@
+from bson import ObjectId
 from rest_framework import serializers
 
 from .models import Address
 
 
-class AddressSerializer(serializers.ModelSerializer):
+class ObjectIdField(serializers.Field):
+    """Serialise a MongoDB ObjectId as its 24-character hex string."""
 
-    class Meta:
-        model = Address
-        fields = ("id", "name", "address", "postalcode", "city", "country", "email")
+    def to_representation(self, value):
+        return str(value)
+
+    def to_internal_value(self, data):
+        return ObjectId(data)
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    id = ObjectIdField(read_only=True)
 
     def validate(self, data):
         if 'country' in data and 'postalcode' in data:

@@ -63,7 +63,7 @@ DATABASES = {
         'NAME': 'Subscription',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-                'host': 'mongodb+srv://django-microservice:<password>@<cluster>'
+        'host': os.environ.get('MONGO_URI', 'mongodb://localhost:27017')
         }
     }
 }

@@ -8,9 +8,16 @@ from dotenv import load_dotenv
 from rapidfuzz import fuzz
 from subscription.models import Address
 
+import os
+
+# API base URL, overridable so the same code works from a host and from
+# inside Docker (where the API lives at a different hostname).
+API_URL = os.environ.get('SUBSCRIPTION_API_URL', 'http://127.0.0.1:7000')
+
+
 redis_client = redis.Redis(host='redis', port=6379, db=0)
 
-load_dotenv()
+load_dotenv(Path(__file__).resolve().parent.parent / '.env')
 
 jwt_key = os.getenv("JWT_KEY")
 jwt_algorithms = os.getenv("JWT_ALGORITHMS")
@@ -61,8 +68,8 @@ def match_address_task(address):
                    }
         print(address)
 
-        response = requests.post('http://address-api:7000/api/v1/addresses/', data=address)
-        redis_client.lpush('streets', match_address)  # add address to cache
+        response = requests.post('{API_URL}/api/v1/addresses/', data=address)
+        redis_client.lpush('addresses', match_address)  # add address to cache
 
         print(f"New address inserted for {address['name']}")
 

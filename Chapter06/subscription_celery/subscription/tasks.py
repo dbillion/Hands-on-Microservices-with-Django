@@ -6,10 +6,17 @@ from django.core.mail import send_mail
 from rapidfuzz import fuzz
 from subscription.models import Address
 
+import os
+
+# API base URL, overridable so the same code works from a host and from
+# inside Docker (where the API lives at a different hostname).
+API_URL = os.environ.get('SUBSCRIPTION_API_URL', 'http://127.0.0.1:7000')
+
+
 
 @shared_task
 def match_address_task(address):
-    response = requests.get('http://127.0.0.1:7000/api/v1/addresses/')
+    response = requests.get('{API_URL}/api/v1/addresses/')
     addresses = [a_address['address'] for a_address in response.json()]
 
     top_score = 0

@@ -17,7 +17,7 @@ class MatchTest(unittest.TestCase):
 
     def setUp(self):
         # Connect to the database and the address collection
-        con = "mongodb+srv://django-microservice:Ue4fK0VuKavclfbo@cluster0.yjchpyg.mongodb.net/?retryWrites=true&w=majority"
+        os.environ.get('MONGO_URI', 'mongodb://localhost:27017')
         client = MongoClient(con, server_api=ServerApi('1'))
         db = client["Subscription"]
         self.col = db["address_api_address"]

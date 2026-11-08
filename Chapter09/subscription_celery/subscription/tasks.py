@@ -8,7 +8,14 @@ from dotenv import load_dotenv
 from rapidfuzz import fuzz
 from subscription.models import Address
 
-load_dotenv()
+import os
+
+# API base URL, overridable so the same code works from a host and from
+# inside Docker (where the API lives at a different hostname).
+API_URL = os.environ.get('SUBSCRIPTION_API_URL', 'http://127.0.0.1:7000')
+
+
+load_dotenv(Path(__file__).resolve().parent.parent / '.env')
 
 jwt_key = os.getenv("JWT_KEY")
 jwt_algorithms = os.getenv("JWT_ALGORITHMS")
@@ -35,7 +42,7 @@ def decode_token(token: str, caller_type: str) -> dict:
 def match_address_task(address):
     calling_producer = decode_token(address['client_token'], 'client')['client_producer']
     if calling_producer == expected_client_producer:
-        response = requests.get('http://address-api:7000/api/v1/addresses/')
+        response = requests.get('{API_URL}/api/v1/addresses/')
         addresses = [a_address['address'] for a_address in response.json()]
 
         top_score = 0

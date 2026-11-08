@@ -17,7 +17,7 @@ class SubscriptionTest(unittest.TestCase):
         self.assertIn('Subscription', self.driver.title)
 
         # MongoDB
-        con = "mongodb+srv://django-microservice:<password>@<cluster>/?retryWrites=true&w=majority"
+        os.environ.get('MONGO_URI', 'mongodb://localhost:27017')
         client = MongoClient(con, server_api=ServerApi('1'))
         db = client["Subscription"]
         self.col = db["address_api_address"]

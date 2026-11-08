@@ -10,7 +10,7 @@ from subscription.forms import SubscriptionForm
 from subscription.tasks import match_address_task
 from .models import Magazine
 
-load_dotenv()
+load_dotenv(Path(__file__).resolve().parent.parent / '.env')
 
 client_token = os.getenv("CLIENT_TOKEN")
 

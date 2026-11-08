@@ -14,7 +14,7 @@ class AddressApiConfig(AppConfig):
         if os.environ.get('RUN_MAIN'):
             redis_client = redis.Redis(host='redis', port=6379)
 
-            con = "mongodb+srv://django-microservice:<password>@<cluster>/?retryWrites=true&w=majority"
+            os.environ.get('MONGO_URI', 'mongodb://localhost:27017')
             client = MongoClient(con, server_api=ServerApi('1'))
             db = client["Subscription"]
             address_col = db["address_api_address"]
